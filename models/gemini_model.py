@@ -1,41 +1,43 @@
 import os
+
 from dotenv import load_dotenv
 from google import genai
 
+from config import GEMINI_MODEL
+
 load_dotenv()
 
-api_key = os.getenv("GEMINI_API_KEY")
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
-client = genai.Client(api_key=api_key)
 
-
-def generate_medical_summary(transcript):
+def generate_summary(transcript):
+    """
+    Generates a structured medical summary using Gemini.
+    """
 
     prompt = f"""
-You are an experienced medical assistant.
+You are an AI Medical Assistant.
 
-Read the following doctor-patient conversation.
+The following transcript was generated using speech-to-text and may contain small spelling mistakes.
 
-Generate:
+Correct obvious spelling mistakes in medicine names if possible.
 
-1. Summary
-2. Medicines
-3. Dosage
-4. Frequency
-5. Duration
-6. Medical Tests
-7. Follow-up Date
-8. Lifestyle Advice
+Generate a structured summary using this format:
 
-Use simple English suitable for senior citizens.
+Patient Complaint:
+Diagnosis:
+Medicines:
+Doctor's Advice:
+Follow-up:
 
 Transcript:
-
 {transcript}
 """
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model=GEMINI_MODEL,
         contents=prompt
     )
 
@@ -43,16 +45,12 @@ Transcript:
 
 if __name__ == "__main__":
 
-    transcript = """
-Patient has fever for three days.
+    sample_transcript = """
+    Doctor, I have had a fever for three days.
+    I also have a headache.
+    I have been taking parasitamol.
+    """
 
-Doctor advised Paracetamol 650 mg twice daily after meals for five days.
+    summary = generate_summary(sample_transcript)
 
-Drink plenty of water.
-
-Follow up after one week.
-"""
-
-    result = generate_medical_summary(transcript)
-
-    print(result)
+    print(summary)
