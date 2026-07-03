@@ -23,3 +23,9 @@ GEMINI_MODEL = "gemini-2.5-flash"
 # ======================================
 
 ALLOWED_AUDIO_TYPES = ["mp3", "wav"]
+
+# ======================================
+# Whisper Model
+# ======================================
+
+WHISPER_MODEL = "base"
