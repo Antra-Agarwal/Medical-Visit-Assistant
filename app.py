@@ -5,7 +5,7 @@ from config import (
     ALLOWED_AUDIO_TYPES
 )
 
-from utils.file_utils import save_uploaded_file
+from services.audio_service import process_audio
 
 # ======================================
 # Application Title
@@ -48,19 +48,30 @@ if st.button("Generate AI Summary"):
 
     if uploaded_file is not None:
 
-        # Save uploaded audio using utility function
-        file_path = save_uploaded_file(uploaded_file)
+        # Process uploaded audio
+        file_path, transcript = process_audio(uploaded_file)
 
         st.success("Audio uploaded successfully!")
 
         st.write("Saved to:", file_path)
 
-        # Display Patient Details
+        # ======================================
+        # Patient Details
+        # ======================================
+
         st.subheader("Patient Details")
 
         st.write("**Name:**", name)
         st.write("**Age:**", age)
         st.write("**Gender:**", gender)
+
+        # ======================================
+        # Transcript
+        # ======================================
+
+        st.subheader("Transcript")
+
+        st.write(transcript)
 
     else:
 
